@@ -139,6 +139,76 @@ export interface PipelineResult {
     method_weights: Record<string, number>;
     final_portfolio: FinalPortfolio;
   };
+  governance?: Governance;
   board_memo: string;
   timestamp: string;
+}
+
+export interface Governance {
+  status: 'approved' | 'escalated';
+  message: string;
+  eligible_count: number;
+  candidate_count: number;
+  eligible: string[];
+  excluded: Array<{ key: string; name: string; violations: string[] }>;
+  final_check: { is_compliant: boolean; violations: string[] };
+}
+
+export interface BacktestRow {
+  key: string;
+  name: string;
+  category: string;
+  is_final: boolean;
+  is_benchmark: boolean;
+  cagr_pct: number;
+  volatility_pct: number;
+  sharpe_ratio: number;
+  max_drawdown_pct: number;
+  final_nav: number;
+}
+
+export interface BacktestDataStatus {
+  source: string;
+  method: string;
+  fetched_at: string | null;
+  file: string;
+  rows: number;
+  columns: number;
+  missing_values: number;
+}
+
+export interface BacktestAsset {
+  ticker: string;
+  name: string;
+  category: string;
+  final_weight_pct: number;
+  bench_weight_pct: number;
+  cagr_pct: number;
+  volatility_pct: number;
+  max_drawdown_pct: number;
+  best_month: { month: string; return_pct: number };
+  worst_month: { month: string; return_pct: number };
+  yahoo_url: string;
+}
+
+export interface BacktestAnnual {
+  years: string[];
+  months: number[];
+  final: number[];
+  benchmark: number[];
+  by_ticker: Record<string, number[]>;
+}
+
+export interface BacktestResult {
+  period: { start: string; end: string; months: number };
+  rebalance: string;
+  risk_free_pct: number;
+  data_source: string;
+  data: BacktestDataStatus;
+  tickers: string[];
+  dates: string[];
+  series: Record<string, number[]>;
+  rows: BacktestRow[];
+  assets: BacktestAsset[];
+  annual: BacktestAnnual;
 }
